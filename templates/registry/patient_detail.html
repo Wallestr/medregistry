@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ patient.full_name }} — MedRegistry{% endblock %}
+
+{% block content %}
+<section class="hero hero--compact">
+  <p class="eyebrow"><a href="{% url 'patient_list' %}">← К списку</a></p>
+  <h1>{{ patient.full_name }}</h1>
+  <p class="lead">
+    СНИЛС {{ patient.snils }} · {{ patient.get_sex_display }} ·
+    {{ patient.birth_date }} · {{ patient.facility.name }}
+  </p>
+</section>
+
+<h2>Иммунизация</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Вакцина</th>
+      <th>Доза</th>
+      <th>Статус</th>
+      <th>План</th>
+      <th>Факт</th>
+      <th>МО</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.vaccine.name }}</td>
+      <td>{{ r.dose_number }}</td>
+      <td><span class="badge badge--{{ r.status }}">{{ r.get_status_display }}</span></td>
+      <td>{{ r.planned_date }}</td>
+      <td>{{ r.performed_date|default:"—" }}</td>
+      <td>{{ r.facility.name }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">Записей нет</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

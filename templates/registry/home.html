@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Обзор — MedRegistry{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Регистр иммунизации</h1>
+  <p class="lead">
+    Учебный модуль в духе медицинской информационной системы:
+    учреждения, пациенты, журнал вакцинации и REST API для интеграций.
+  </p>
+</section>
+
+<section class="stats">
+  <article class="stat">
+    <div class="stat__value">{{ facilities_count }}</div>
+    <div class="stat__label">Учреждений</div>
+  </article>
+  <article class="stat">
+    <div class="stat__value">{{ patients_count }}</div>
+    <div class="stat__label">Пациентов</div>
+  </article>
+  <article class="stat">
+    <div class="stat__value">{{ planned_count }}</div>
+    <div class="stat__label">Запланировано</div>
+  </article>
+  <article class="stat">
+    <div class="stat__value">{{ completed_count }}</div>
+    <div class="stat__label">Выполнено</div>
+  </article>
+</section>
+
+<section class="grid-2">
+  <div>
+    <h2>По регионам</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Регион</th>
+          <th>МО</th>
+          <th>Пациенты</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in by_region %}
+        <tr>
+          <td>{{ row.region }}</td>
+          <td>{{ row.facilities }}</td>
+          <td>{{ row.patients }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">Нет данных. Запустите <code>python manage.py seed_demo</code></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h2>Последние записи</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Пациент</th>
+          <th>Вакцина</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in recent %}
+        <tr>
+          <td><a href="{% url 'patient_detail' item.patient_id %}">{{ item.patient.full_name }}</a></td>
+          <td>{{ item.vaccine.name }}</td>
+          <td><span class="badge badge--{{ item.status }}">{{ item.get_status_display }}</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">Записей пока нет</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

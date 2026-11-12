@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Журнал иммунизации — MedRegistry{% endblock %}
+
+{% block content %}
+<section class="hero hero--compact">
+  <h1>Журнал иммунизации</h1>
+  <form class="search" method="get">
+    <select name="status">
+      <option value="">Все статусы</option>
+      {% for value, label in statuses %}
+      <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Фильтр</button>
+  </form>
+</section>
+
+<table>
+  <thead>
+    <tr>
+      <th>Дата плана</th>
+      <th>Пациент</th>
+      <th>Вакцина</th>
+      <th>Доза</th>
+      <th>Статус</th>
+      <th>Учреждение</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.planned_date }}</td>
+      <td><a href="{% url 'patient_detail' r.patient_id %}">{{ r.patient.full_name }}</a></td>
+      <td>{{ r.vaccine.name }}</td>
+      <td>{{ r.dose_number }}</td>
+      <td><span class="badge badge--{{ r.status }}">{{ r.get_status_display }}</span></td>
+      <td>{{ r.facility.name }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">Записей нет</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

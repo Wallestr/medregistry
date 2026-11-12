@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Пациенты — MedRegistry{% endblock %}
+
+{% block content %}
+<section class="hero hero--compact">
+  <h1>Пациенты</h1>
+  <form class="search" method="get" action="{% url 'patient_list' %}">
+    <input type="search" name="q" value="{{ q }}" placeholder="Фамилия, имя или СНИЛС">
+    <button type="submit">Найти</button>
+  </form>
+</section>
+
+<table>
+  <thead>
+    <tr>
+      <th>ФИО</th>
+      <th>СНИЛС</th>
+      <th>Дата рождения</th>
+      <th>Учреждение</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in patients %}
+    <tr>
+      <td><a href="{% url 'patient_detail' p.pk %}">{{ p.full_name }}</a></td>
+      <td>{{ p.snils }}</td>
+      <td>{{ p.birth_date }}</td>
+      <td>{{ p.facility.name }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Ничего не найдено</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
