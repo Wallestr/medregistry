@@ -1,33 +1,20 @@
 # MedRegistry
 
-Демо-модуль медицинской информационной системы: учёт пациентов и иммунизации.
+Небольшой pet-проект: учёт пациентов и иммунизации на Django.
 
-Сделан как обсуждаемый на собеседовании GitHub-проект под вакансии вроде КОМТЕК (Python + PostgreSQL + веб/REST, плюс Django/DRF и HTML).
+Есть HTML-страницы для просмотра журнала и REST API на DRF. База — PostgreSQL, для локального запуска можно SQLite.
 
 ## Стек
 
-- Python 3.12
-- Django 5 + Django REST Framework
-- PostgreSQL (SQLite для быстрого локального старта)
-- HTML/CSS шаблоны (обзор, пациенты, журнал)
-- Docker Compose
+- Python 3 / Django 5 / DRF
+- PostgreSQL (или SQLite)
+- HTML + CSS
+- Docker Compose (по желанию)
 
-## Что внутри
-
-| Слой | Возможности |
-|------|-------------|
-| Модели | учреждения, пациенты, вакцины, факты иммунизации, ограничения уникальности дозы |
-| REST API | CRUD + `POST /api/immunizations/{id}/complete/` + `GET /api/facilities/stats/` |
-| HTML | дашборд, поиск пациентов, карточка, журнал со статусами |
-| SQL/ORM | фильтры, `annotate`/`Count`, индексы, `PROTECT`/`CASCADE` |
-
-Домен упрощённый (учебный), но близкий к реальным задачам: справочники МО, карточка пациента, журнал вакцинации, API для смежных систем.
-
-## Быстрый старт (SQLite)
+## Запуск
 
 ```bash
 python -m venv .venv
-# Windows:
 .venv\Scripts\activate
 pip install -r requirements.txt
 
@@ -37,19 +24,23 @@ python manage.py seed_demo
 python manage.py runserver
 ```
 
-Открыть:
+- http://127.0.0.1:8000/ — интерфейс
+- http://127.0.0.1:8000/api/ — API
+- http://127.0.0.1:8000/admin/ — админка (`createsuperuser`)
 
-- UI: http://127.0.0.1:8000/
-- API: http://127.0.0.1:8000/api/
-- Admin: http://127.0.0.1:8000/admin/ (`createsuperuser` при необходимости)
-
-## PostgreSQL через Docker
+### Через Docker
 
 ```bash
 docker compose up --build
 ```
 
-UI/API на http://localhost:8000/
+## Что умеет
+
+- справочник медучреждений
+- карточки пациентов
+- журнал иммунизации (план / выполнено / отмена)
+- API: CRUD + завершение записи (`/api/immunizations/{id}/complete/`)
+- простая статистика по учреждениям (`/api/facilities/stats/`)
 
 ## Тесты
 
@@ -57,29 +48,4 @@ UI/API на http://localhost:8000/
 python manage.py test
 ```
 
-## Примеры API
-
-```bash
-# пациенты
-curl http://127.0.0.1:8000/api/patients/
-
-# статистика по учреждениям
-curl http://127.0.0.1:8000/api/facilities/stats/
-
-# завершить вакцинацию
-curl -X POST http://127.0.0.1:8000/api/immunizations/1/complete/ \
-  -H "Content-Type: application/json" \
-  -d "{\"performed_date\": \"2026-12-02\"}"
-```
-
-## О чём говорить на собеседовании
-
-1. Почему `PROTECT` на учреждении/вакцине и `CASCADE` на записях пациента.
-2. Зачем constraint `uniq_patient_vaccine_dose`.
-3. Как устроен action `complete` и валидация статуса в serializer.
-4. Как `facilities/stats` считает агрегаты без сырого SQL (и где сырой SQL был бы уместен).
-5. Разделение HTML UI и REST API в одном Django-проекте.
-
-## Важно
-
-Это портфолио-демо, не клинический продукт. Персональные данные — вымышленные.
+Данные в демо вымышленные, это не боевая медсистема.
