@@ -4,6 +4,20 @@
 
 Есть HTML-страницы для просмотра журнала и REST API на DRF. База — PostgreSQL, для локального запуска можно SQLite.
 
+## Скриншоты
+
+### Обзор
+![Обзор](docs/home.png)
+
+### Пациенты
+![Пациенты](docs/patients.png)
+
+### Журнал иммунизации
+![Журнал иммунизации](docs/immunizations.png)
+
+### Карточка пациента
+![Карточка пациента](docs/patient_detail.png)
+
 ## Стек
 
 - Python 3 / Django 5 / DRF
